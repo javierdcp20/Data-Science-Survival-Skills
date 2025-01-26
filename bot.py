@@ -21,7 +21,8 @@ pipe = pipeline(
 def generate_response(user_message: str) -> str:
     
     prompt = (
-        f"You are a friendly and concise chatbot. Respond only to the user's message.\n"
+        f"You are a concise chatbot. Respond briefly and directly to the user's message. "
+        f"Stop after providing your first response.\n"
         f"User: {user_message}\n"
         "Chatbot:"
     )
@@ -37,12 +38,16 @@ def generate_response(user_message: str) -> str:
     # Obtain answer
     raw_response = outputs[0]["generated_text"]
     
-    if "Chatbot:" in raw_response:
-        response = raw_response.split("Chatbot:")[-1].strip()
+    response_parts = raw_response.split("Chatbot:")
+
+    if len(response_parts) > 1:
+    # Extraer lo que sigue al primer "Chatbot:"
+        response = response_parts[1].split("User:")[0].strip()
     else:
+    # Usar el texto completo si no hay divisiones
         response = raw_response.strip()
-    
-    
+   
+
     return response
 
 
